@@ -1,0 +1,4 @@
+Just a small project that does offline analys
+
+Do a 'mvn tomcat:run' and take a look at http://localhost:8080/gameboy
+
