@@ -40,6 +40,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 
         /* bind the REST resources */
         bind(UserResource.class);
+        bind(ThingResource.class);
 
         /* bind jackson converters for JAXB/JSON serialization */
         bind(MessageBodyReader.class).to(JacksonJsonProvider.class);

@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Access 'things' over http/json.
  */
-@Path("/user")
+@Path("/thing")
 public class ThingResource {
 
   private final Map<Long, Thing> things = ResultCache.getInstance().getThings();

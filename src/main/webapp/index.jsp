@@ -11,7 +11,7 @@
 <h1>Welcome to Gameboy</h1>
 <ul>
     <li><a href="rest/user">User Resource</a></li>
-    <li><a href="rest/thing">User Resource</a></li>
+    <li><a href="rest/thing">Thing Resource</a></li>
     <li><a href="monitoring">Monitoring</a></li>
 </ul>
 </body>
