@@ -1,5 +1,6 @@
 package com.goodorbad.gameboy.model;
 
+import com.google.common.base.Preconditions;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -17,6 +18,9 @@ public class StandaloneThing {
   private final long netVote;
   private final long uniqueUserVotes;
 
+  private final double confidence;
+  private final double contention;
+  
   @JsonCreator
   public StandaloneThing(@JsonProperty("id") long id,
                          @JsonProperty("upVotes") long upVotes,
@@ -25,6 +29,9 @@ public class StandaloneThing {
                          @JsonProperty("totalVotes") long totalVotes,
                          @JsonProperty("newVote") long netVote,
                          @JsonProperty("uniqueUserVotes") long uniqueUserVotes) {
+
+    Preconditions.checkArgument(totalVotes >= 0);
+
     this.id = id;
     this.upVotes = upVotes;
     this.downVotes = downVotes;
@@ -32,6 +39,18 @@ public class StandaloneThing {
     this.totalVotes = totalVotes;
     this.netVote = netVote;
     this.uniqueUserVotes = uniqueUserVotes;
+
+    final long gbTotal = this.upVotes + this.downVotes;
+    if (gbTotal > 0) {
+
+      this.confidence = (double) Math.abs(downVotes - upVotes) / (double) gbTotal;
+      this.contention = Math.sqrt((1.0 - confidence) * ((double) totalVotes/10.0));
+    } else {
+      this.confidence = 0;
+      this.contention = 0;
+    }
+
+    
   }
 
   public StandaloneThing(StandaloneThing src) {
@@ -64,6 +83,14 @@ public class StandaloneThing {
 
   public long getUniqueUserVotes() {
     return uniqueUserVotes;
+  }
+
+  public double getConfidence() {
+    return confidence;
+  }
+
+  public double getContention() {
+    return contention;
   }
 
   @Override
