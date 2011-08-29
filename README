@@ -2,3 +2,9 @@ Just a small project that does offline analys
 
 Do a 'mvn tomcat:run' and take a look at http://localhost:8080/gameboy
 
+API Endpoints:
+/gameboy/monitoring/metrics       - performance statistics
+/gameboy/rest/user                - list user ids
+/gameboy/rest/user/N              - detailed information about user N
+/gameboy/rest/thing?sortby=SORT   - thingIds, optionally sorted by one of {id, contention, none}
+/gameboy/rest/thing/N             - detailed information about thing N

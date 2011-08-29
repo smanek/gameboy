@@ -2,6 +2,7 @@ package com.goodorbad.gameboy.util;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.sun.org.apache.bcel.internal.generic.FNEG;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +22,16 @@ public class Functional {
       if (predicate.apply(a)) {
         res.add(a);
       }
+    }
+
+    return res;
+  }
+
+  public static <A, B> List<B> map(Function<A, B> fn, Collection<A> data) {
+    List<B> res = Lists.newArrayListWithExpectedSize(data.size());
+
+    for (A a : data) {
+      res.add(fn.apply(a));
     }
 
     return res;
