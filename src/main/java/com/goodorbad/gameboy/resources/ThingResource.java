@@ -1,6 +1,7 @@
 package com.goodorbad.gameboy.resources;
 
-import com.goodorbad.gameboy.model.Thing;
+import com.goodorbad.gameboy.model.RelativeThing;
+import com.goodorbad.gameboy.model.StandaloneThing;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,13 +28,13 @@ public class ThingResource extends AbstractResource {
   @GET
   @Path("/{thingId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Thing getUser(@PathParam("thingId") long thingId) {
+  public RelativeThing getUser(@PathParam("thingId") long thingId) {
     checkIfInitialized();
-    Thing t = rs.getThings().get(thingId);
+    StandaloneThing t = rs.getThings().get(thingId);
     if (t == null) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } else {
-      return t;
+      return t.relativeTo(rs.getMetastats());
     }
   }
 }

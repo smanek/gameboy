@@ -7,17 +7,17 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Represents a single user's vote on a single thing.
  */
 public class Vote {
-  private final Thing thing;
+  private final StandaloneThing thing;
   private final short vote;
 
   @JsonCreator
-  public Vote(@JsonProperty("thing") Thing thing,
+  public Vote(@JsonProperty("thing") StandaloneThing thing,
               @JsonProperty("vote") short vote) {
     this.thing = thing;
     this.vote = vote;
   }
 
-  public Thing getThing() {
+  public StandaloneThing getThing() {
     return thing;
   }
 

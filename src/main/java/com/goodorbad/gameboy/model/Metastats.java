@@ -1,7 +1,5 @@
 package com.goodorbad.gameboy.model;
 
-import com.goodorbad.gameboy.util.Functional;
-import com.google.common.base.Function;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
 import java.util.Collection;
@@ -19,7 +17,7 @@ public class Metastats {
   private final double noVoteThings;
   private final double noVoteUsers;
 
-  public Metastats(Collection<StandaloneUser> standaloneUsers, Collection<Thing> things) {
+  public Metastats(Collection<StandaloneUser> standaloneUsers, Collection<StandaloneThing> things) {
     userUpvotePercent = new SummaryStatistics();
     userDownvotePercent = new SummaryStatistics();
 
@@ -46,7 +44,7 @@ public class Metastats {
     thingDownvotePercent = new SummaryStatistics();
 
     long noVoteThingCount = 0;
-    for (Thing thing : things) {
+    for (StandaloneThing thing : things) {
       if (thing.getTotalVotes() > 0) {
         final double upvotePercent = (double) thing.getUpVotes() / (double) thing.getTotalVotes();
         thingUpvotePercent.addValue(upvotePercent);

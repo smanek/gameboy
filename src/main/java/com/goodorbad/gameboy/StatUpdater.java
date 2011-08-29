@@ -1,8 +1,8 @@
 package com.goodorbad.gameboy;
 
 import com.goodorbad.gameboy.model.Metastats;
+import com.goodorbad.gameboy.model.StandaloneThing;
 import com.goodorbad.gameboy.model.StandaloneUser;
-import com.goodorbad.gameboy.model.Thing;
 import com.goodorbad.gameboy.model.Vote;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -53,7 +53,7 @@ public class StatUpdater {
     log.info("StatUpdater is doing an update");
     final long startTime = System.currentTimeMillis();
 
-    final Map<Long, Thing> things = loadThings();
+    final Map<Long, StandaloneThing> things = loadThings();
     final Map<Long, StandaloneUser> users = loadUsers(things);
     final Metastats m = computeMetaStatistics(users, things);
 
@@ -65,7 +65,7 @@ public class StatUpdater {
     return true;
   }
 
-  private Metastats computeMetaStatistics(Map<Long, StandaloneUser> users, Map<Long, Thing> things) {
+  private Metastats computeMetaStatistics(Map<Long, StandaloneUser> users, Map<Long, StandaloneThing> things) {
     final long startTime = System.currentTimeMillis();
     Metastats res = new Metastats(users.values(), things.values());
     final long endTime = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class StatUpdater {
     return res;
   }
 
-  private Map<Long, StandaloneUser> loadUsers(Map<Long, Thing> things) {
+  private Map<Long, StandaloneUser> loadUsers(Map<Long, StandaloneThing> things) {
     final long startTime = System.currentTimeMillis();
 
     ImmutableMap.Builder<Long, StandaloneUser> builder = ImmutableMap.builder();
@@ -105,10 +105,10 @@ public class StatUpdater {
     return builder.build();
   }
 
-  private Map<Long, Thing> loadThings() {
+  private Map<Long, StandaloneThing> loadThings() {
     final long startTime = System.currentTimeMillis();
 
-    ImmutableMap.Builder<Long, Thing> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<Long, StandaloneThing> builder = ImmutableMap.builder();
     Set<String> things = redis.smembers("thing");
     assert things.size() > 0;
 
@@ -125,7 +125,7 @@ public class StatUpdater {
       final long netVotes = getLongVal("thing:" + thingIdStr + ":tally", upVotes - downVotes);
       final long uniqueUserVotes = Math.max(redis.scard("thing:" + thingIdStr + ":user"),
           upVotes + downVotes + abstainVotes);
-      final Thing t = new Thing(id, upVotes, downVotes, abstainVotes, totalVotes, netVotes, uniqueUserVotes);
+      final StandaloneThing t = new StandaloneThing(id, upVotes, downVotes, abstainVotes, totalVotes, netVotes, uniqueUserVotes);
 
       PER_THING_LOAD_TIME.update(System.currentTimeMillis() - thingStartTime, TimeUnit.MILLISECONDS);
       builder.put(id, t);

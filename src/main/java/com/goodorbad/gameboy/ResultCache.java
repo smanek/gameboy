@@ -1,7 +1,7 @@
 package com.goodorbad.gameboy;
 
 import com.goodorbad.gameboy.model.Metastats;
-import com.goodorbad.gameboy.model.Thing;
+import com.goodorbad.gameboy.model.StandaloneThing;
 import com.goodorbad.gameboy.model.StandaloneUser;
 import com.google.common.base.Preconditions;
 import com.yammer.metrics.Metrics;
@@ -29,7 +29,7 @@ public class ResultCache {
   private final AtomicLong lastUpdate;
 
   private Map<Long, StandaloneUser> users;
-  private Map<Long, Thing> things;
+  private Map<Long, StandaloneThing> things;
   private Metastats metastats;
 
   private ResultCache() {
@@ -54,7 +54,7 @@ public class ResultCache {
     });
   }
 
-  public void update(Map<Long, StandaloneUser> users, Map<Long, Thing> things, Metastats metastats) {
+  public void update(Map<Long, StandaloneUser> users, Map<Long, StandaloneThing> things, Metastats metastats) {
     Preconditions.checkNotNull(users);
     Preconditions.checkNotNull(things);
 
@@ -89,7 +89,7 @@ public class ResultCache {
     }
   }
 
-  public Map<Long, Thing> getThings() {
+  public Map<Long, StandaloneThing> getThings() {
     lock.readLock().lock();
     try {
       return things;

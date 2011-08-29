@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Model of things.
  */
-public class Thing {
+public class StandaloneThing {
   private final long id;
 
   private final long upVotes;
@@ -18,13 +18,13 @@ public class Thing {
   private final long uniqueUserVotes;
 
   @JsonCreator
-  public Thing(@JsonProperty("id") long id,
-               @JsonProperty("upVotes") long upVotes,
-               @JsonProperty("downVotes") long downVotes,
-               @JsonProperty("abstainVotes") long abstainVotes,
-               @JsonProperty("totalVotes") long totalVotes,
-               @JsonProperty("newVote") long netVote,
-               @JsonProperty("uniqueUserVotes") long uniqueUserVotes) {
+  public StandaloneThing(@JsonProperty("id") long id,
+                         @JsonProperty("upVotes") long upVotes,
+                         @JsonProperty("downVotes") long downVotes,
+                         @JsonProperty("abstainVotes") long abstainVotes,
+                         @JsonProperty("totalVotes") long totalVotes,
+                         @JsonProperty("newVote") long netVote,
+                         @JsonProperty("uniqueUserVotes") long uniqueUserVotes) {
     this.id = id;
     this.upVotes = upVotes;
     this.downVotes = downVotes;
@@ -34,6 +34,10 @@ public class Thing {
     this.uniqueUserVotes = uniqueUserVotes;
   }
 
+  public StandaloneThing(StandaloneThing src) {
+    this(src.id, src.upVotes, src.downVotes, src.abstainVotes,
+        src.totalVotes, src.netVote, src.uniqueUserVotes);
+  }
   public long getId() {
     return id;
   }
@@ -64,7 +68,7 @@ public class Thing {
 
   @Override
   public String toString() {
-    return "Thing{" +
+    return "StandaloneThing{" +
         "id=" + id +
         ", upVotes=" + upVotes +
         ", downVotes=" + downVotes +
@@ -73,5 +77,9 @@ public class Thing {
         ", netVote=" + netVote +
         ", uniqueUserVotes=" + uniqueUserVotes +
         '}';
+  }
+
+  public RelativeThing relativeTo(Metastats metastats) {
+    return new RelativeThing(this, metastats);
   }
 }
