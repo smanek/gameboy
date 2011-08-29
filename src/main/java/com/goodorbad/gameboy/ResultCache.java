@@ -2,7 +2,7 @@ package com.goodorbad.gameboy;
 
 import com.goodorbad.gameboy.model.Metastats;
 import com.goodorbad.gameboy.model.Thing;
-import com.goodorbad.gameboy.model.User;
+import com.goodorbad.gameboy.model.StandaloneUser;
 import com.google.common.base.Preconditions;
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.GaugeMetric;
@@ -28,7 +28,7 @@ public class ResultCache {
   private final AtomicBoolean initialized;
   private final AtomicLong lastUpdate;
 
-  private Map<Long, User> users;
+  private Map<Long, StandaloneUser> users;
   private Map<Long, Thing> things;
   private Metastats metastats;
 
@@ -54,7 +54,7 @@ public class ResultCache {
     });
   }
 
-  public void update(Map<Long, User> users, Map<Long, Thing> things, Metastats metastats) {
+  public void update(Map<Long, StandaloneUser> users, Map<Long, Thing> things, Metastats metastats) {
     Preconditions.checkNotNull(users);
     Preconditions.checkNotNull(things);
 
@@ -80,7 +80,7 @@ public class ResultCache {
   }
 
   // the lock establishes a 'happens-before' relationship, users/things don't have to volatile.
-  public Map<Long, User> getUsers() {
+  public Map<Long, StandaloneUser> getUsers() {
     lock.readLock().lock();
     try {
       return users;

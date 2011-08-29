@@ -1,6 +1,6 @@
 package com.goodorbad.gameboy.resources;
 
-import com.goodorbad.gameboy.model.User;
+import com.goodorbad.gameboy.model.StandaloneUser;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,13 +27,13 @@ public class UserResource extends AbstractResource {
   @GET
   @Path("/{userId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public User getUser(@PathParam("userId") long userId) {
+  public StandaloneUser getUser(@PathParam("userId") long userId) {
     checkIfInitialized();
-    User u = rs.getUsers().get(userId);
+    StandaloneUser u = rs.getUsers().get(userId);
     if (u == null) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } else {
-      return u;
+      return u.relativeTo(rs.getMetastats());
     }
   }
 }

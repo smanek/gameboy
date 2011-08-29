@@ -1,12 +1,11 @@
 package com.goodorbad.gameboy;
 
 import com.goodorbad.gameboy.model.Metastats;
+import com.goodorbad.gameboy.model.StandaloneUser;
 import com.goodorbad.gameboy.model.Thing;
-import com.goodorbad.gameboy.model.User;
 import com.goodorbad.gameboy.model.Vote;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.TimerMetric;
 import org.apache.commons.logging.Log;
@@ -55,7 +54,7 @@ public class StatUpdater {
     final long startTime = System.currentTimeMillis();
 
     final Map<Long, Thing> things = loadThings();
-    final Map<Long, User> users = loadUsers(things);
+    final Map<Long, StandaloneUser> users = loadUsers(things);
     final Metastats m = computeMetaStatistics(users, things);
 
     final long endTime = System.currentTimeMillis();
@@ -66,7 +65,7 @@ public class StatUpdater {
     return true;
   }
 
-  private Metastats computeMetaStatistics(Map<Long, User> users, Map<Long, Thing> things) {
+  private Metastats computeMetaStatistics(Map<Long, StandaloneUser> users, Map<Long, Thing> things) {
     final long startTime = System.currentTimeMillis();
     Metastats res = new Metastats(users.values(), things.values());
     final long endTime = System.currentTimeMillis();
@@ -74,10 +73,10 @@ public class StatUpdater {
     return res;
   }
 
-  private Map<Long, User> loadUsers(Map<Long, Thing> things) {
+  private Map<Long, StandaloneUser> loadUsers(Map<Long, Thing> things) {
     final long startTime = System.currentTimeMillis();
 
-    ImmutableMap.Builder<Long, User> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<Long, StandaloneUser> builder = ImmutableMap.builder();
     Set<String> users = redis.smembers("user");
     assert things.size() > 0;
 
@@ -97,7 +96,7 @@ public class StatUpdater {
         userVotes.add(new Vote(things.get(thingVotedOn), voteVal));
       }
 
-      User u = new User(userId, userVotes);
+      StandaloneUser u = new StandaloneUser(userId, userVotes);
       PER_USER_LOAD_TIME.update(System.currentTimeMillis() - userLoadStart, TimeUnit.MILLISECONDS);
       builder.put(userId, u);
     }

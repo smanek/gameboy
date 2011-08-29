@@ -19,27 +19,15 @@ public class Metastats {
   private final double noVoteThings;
   private final double noVoteUsers;
 
-  public Metastats(Collection<User> users, Collection<Thing> things) {
+  public Metastats(Collection<StandaloneUser> standaloneUsers, Collection<Thing> things) {
     userUpvotePercent = new SummaryStatistics();
     userDownvotePercent = new SummaryStatistics();
 
     long noVoteUserCount = 0;
-    for (User user : users) {
-      final int totalVotes = user.getVotes().size();
-
-      final int upvotes = Functional.filter(new Function<Vote, Boolean>() {
-        @Override
-        public Boolean apply(Vote v) {
-          return v.getVote() > 0;
-        }
-      }, user.getVotes()).size();
-
-      final int dowvotes = Functional.filter(new Function<Vote, Boolean>() {
-        @Override
-        public Boolean apply(Vote v) {
-          return v.getVote() < 0;
-        }
-      }, user.getVotes()).size();
+    for (StandaloneUser standaloneUser : standaloneUsers) {
+      final int totalVotes = standaloneUser.getVotes().size();
+      final int upvotes = standaloneUser.getUpVotes();
+      final int dowvotes = standaloneUser.getDownVotes();
 
       if (totalVotes > 0) {
         final double upvotePercent = (double) upvotes / (double) totalVotes;
@@ -51,7 +39,7 @@ public class Metastats {
         noVoteUserCount++;
       }
     }
-    this.noVoteUsers = (double) noVoteUserCount / (double) users.size();
+    this.noVoteUsers = (double) noVoteUserCount / (double) standaloneUsers.size();
 
 
     thingUpvotePercent = new SummaryStatistics();
