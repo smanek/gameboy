@@ -11,7 +11,7 @@
 <h1>Welcome to Gameboy</h1>
 <ul>
     <li><a href="rest/user">User Resource</a></li>
-    <li><a href="rest/thing?sortby=none">Thing Resource</a></li>
+    <li><a href="rest/thing?sortBy=id">Thing Resource</a></li>
     <li><a href="rest/stats">Aggregate Statistics</a></li>
     <li><a href="monitoring">Monitoring</a></li>
 </ul>
