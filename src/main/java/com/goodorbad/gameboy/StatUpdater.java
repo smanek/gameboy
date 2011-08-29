@@ -1,5 +1,6 @@
 package com.goodorbad.gameboy;
 
+import com.goodorbad.gameboy.model.Metastats;
 import com.goodorbad.gameboy.model.Thing;
 import com.goodorbad.gameboy.model.User;
 import com.goodorbad.gameboy.model.Vote;
@@ -53,23 +54,24 @@ public class StatUpdater {
     log.info("StatUpdater is doing an update");
     final long startTime = System.currentTimeMillis();
 
-    Map<Long, Thing> things = loadThings();
-    Map<Long, User> users = loadUsers(things);
-    computeMetaStatistics(users, things);
+    final Map<Long, Thing> things = loadThings();
+    final Map<Long, User> users = loadUsers(things);
+    final Metastats m = computeMetaStatistics(users, things);
 
     final long endTime = System.currentTimeMillis();
     TOTAL_UPDATE_TIME.update(endTime - startTime, TimeUnit.MILLISECONDS);
 
-    resultCache.update(users, things);
+    resultCache.update(users, things, m);
 
     return true;
   }
 
-  private void computeMetaStatistics(Map<Long, User> users, Map<Long, Thing> things) {
+  private Metastats computeMetaStatistics(Map<Long, User> users, Map<Long, Thing> things) {
     final long startTime = System.currentTimeMillis();
-
+    Metastats res = new Metastats(users.values(), things.values());
     final long endTime = System.currentTimeMillis();
     META_STAT_TIME.update(endTime - startTime, TimeUnit.MILLISECONDS);
+    return res;
   }
 
   private Map<Long, User> loadUsers(Map<Long, Thing> things) {
@@ -119,10 +121,11 @@ public class StatUpdater {
       final long upVotes = getLongVal("thing:" + thingIdStr + ":ballot:1", 0);
       final long downVotes = getLongVal("thing:" + thingIdStr + ":ballot:-1", 0);
       final long abstainVotes = getLongVal("thing:" + thingIdStr + ":ballot:0", 0);
-      final long totalVotes = getLongVal("thing:" + thingIdStr + ":ballot",
+      final long totalVotes = Math.max(getLongVal("thing:" + thingIdStr + ":ballot", 0),
           upVotes + downVotes + abstainVotes);
       final long netVotes = getLongVal("thing:" + thingIdStr + ":tally", upVotes - downVotes);
-      final long uniqueUserVotes = redis.scard("thing:" + thingIdStr + ":user");
+      final long uniqueUserVotes = Math.max(redis.scard("thing:" + thingIdStr + ":user"),
+          upVotes + downVotes + abstainVotes);
       final Thing t = new Thing(id, upVotes, downVotes, abstainVotes, totalVotes, netVotes, uniqueUserVotes);
 
       PER_THING_LOAD_TIME.update(System.currentTimeMillis() - thingStartTime, TimeUnit.MILLISECONDS);

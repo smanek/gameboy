@@ -12,6 +12,7 @@
 <ul>
     <li><a href="rest/user">User Resource</a></li>
     <li><a href="rest/thing">Thing Resource</a></li>
+    <li><a href="rest/stats">Aggregate Statistics</a></li>
     <li><a href="monitoring">Monitoring</a></li>
 </ul>
 </body>

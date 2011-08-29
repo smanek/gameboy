@@ -1,5 +1,8 @@
 package com.goodorbad.gameboy;
 
+import com.goodorbad.gameboy.resources.StatsResource;
+import com.goodorbad.gameboy.resources.ThingResource;
+import com.goodorbad.gameboy.resources.UserResource;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -41,7 +44,9 @@ public class GuiceServletConfig extends GuiceServletContextListener {
         /* bind the REST resources */
         bind(UserResource.class);
         bind(ThingResource.class);
+        bind(StatsResource.class);
 
+        
         /* bind jackson converters for JAXB/JSON serialization */
         bind(MessageBodyReader.class).to(JacksonJsonProvider.class);
         bind(MessageBodyWriter.class).to(JacksonJsonProvider.class);

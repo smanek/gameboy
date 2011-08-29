@@ -1,5 +1,6 @@
 package com.goodorbad.gameboy;
 
+import com.goodorbad.gameboy.model.Metastats;
 import com.goodorbad.gameboy.model.Thing;
 import com.goodorbad.gameboy.model.User;
 import com.google.common.base.Preconditions;
@@ -29,6 +30,7 @@ public class ResultCache {
 
   private Map<Long, User> users;
   private Map<Long, Thing> things;
+  private Metastats metastats;
 
   private ResultCache() {
     lock = new ReentrantReadWriteLock();
@@ -50,10 +52,9 @@ public class ResultCache {
         return System.currentTimeMillis() - lastUpdate.get();
       }
     });
-
   }
 
-  public void update(Map<Long, User> users, Map<Long, Thing> things) {
+  public void update(Map<Long, User> users, Map<Long, Thing> things, Metastats metastats) {
     Preconditions.checkNotNull(users);
     Preconditions.checkNotNull(things);
 
@@ -61,11 +62,21 @@ public class ResultCache {
     try {
       this.users = users;
       this.things = things;
+      this.metastats = metastats;
     } finally {
       lock.writeLock().unlock();
     }
     initialized.set(true);
     lastUpdate.set(System.currentTimeMillis());
+  }
+
+  public Metastats getMetastats() {
+    lock.readLock().lock();
+    try {
+      return metastats;
+    } finally {
+      lock.readLock().unlock();
+    }
   }
 
   // the lock establishes a 'happens-before' relationship, users/things don't have to volatile.
@@ -85,5 +96,9 @@ public class ResultCache {
     } finally {
       lock.readLock().unlock();
     }
+  }
+
+  public boolean isInitialized() {
+    return initialized.get();
   }
 }
