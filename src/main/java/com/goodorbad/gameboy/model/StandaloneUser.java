@@ -49,7 +49,7 @@ public class StandaloneUser {
 
   public StandaloneUser(StandaloneUser src) {
     this.id = src.id;
-    this.votes = src.getVotes();
+    this.votes = null;//src.getVotes();
     this.upVotes = src.upVotes;
     this.downVotes = src.downVotes;
     this.abstainVotes = src.abstainVotes;
